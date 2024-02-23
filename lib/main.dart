@@ -1,8 +1,11 @@
 
+import "dart:js";
+
 import "package:firebase_core/firebase_core.dart";
 import "package:flutter/material.dart";
+import "package:stock_management_akshaya_store/component/view/home_view.dart";
 import "package:stock_management_akshaya_store/component/view/login.dart";
-import "package:stock_management_akshaya_store/firebase_options.dart";
+import "package:stock_management_akshaya_store/component/view/new_customer_view.dart";
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,9 +18,11 @@ void main() async {
     )
   );
   Widget app = MaterialApp(
-    initialRoute: "/login",
+    initialRoute: "/customerAdding",
     routes: {
-      "/login" : (context) => const LoginPage()
+      "/login" : (context) => const LoginPage(),
+      "/home" : (context) => const HomePage(),
+      "/customerAdding" :(context) => const NewCustomerAddingPage()
     },
   );
   runApp(app);
