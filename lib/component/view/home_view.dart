@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:stock_management_akshaya_store/component/view/new_customer_view.dart';
 
@@ -9,6 +10,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  TextEditingController agencyController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,10 +80,10 @@ class _HomePageState extends State<HomePage> {
           children: [
             MaterialButton(
               onPressed: (){
-                // Navigator.push(
-                //     context,
-                //     MaterialPageRoute(builder: (context) => ),
-                // );
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => NewCustomerAddingPage())
+                );
               },
               child: Text("ADD CUSTOMER"),
               color: Colors.blue,
@@ -88,25 +91,65 @@ class _HomePageState extends State<HomePage> {
             SizedBox(width: 30,),
             MaterialButton(
               onPressed: (){
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => NewCustomerAddingPage())
-                );
+
               },
               child: Text("ADD STOCK"),
+              color: Colors.blue,
+            ),
+            SizedBox(height: 20,),
+            MaterialButton(
+              onPressed: (){
+
+              },
+              child: const Text("SELL STOCK"),
               color: Colors.blue,
             ),
             SizedBox(width: 30,),
             MaterialButton(
               onPressed: (){
-
+                _submit();
               },
-              child: Text("SELL STOCK"),
+              child: const Text("ADD NEW AGENCY"),
               color: Colors.blue,
             ),
           ],
         )
       ],
+    );
+  }
+  Future _submit(){
+    return showDialog(
+        context: context,
+        builder: (context){
+          return AlertDialog(
+            title: const Text("ADD NEW AGENCY",style: TextStyle(color: Colors.blue,fontSize: 20),),
+            content: TextField(
+              controller: agencyController,
+              decoration: InputDecoration(
+                  hintText: "Enter Agency",
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(color: Colors.blue,width: 2)
+                  )
+              ),
+            ),
+            actions: [
+              MaterialButton(
+                onPressed: (){
+                  if(agencyController.text != "") {
+                    CollectionReference agencyRef = FirebaseFirestore.instance
+                        .collection("agency");
+                    agencyRef.add({
+                      "agencyName": agencyController.text
+                    });
+                    Navigator.pop(context);
+                  }
+                },
+                child: Text("Submit",style: TextStyle(color: Colors.blue),),
+              )
+            ],
+          );
+        }
     );
   }
 }

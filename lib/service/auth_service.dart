@@ -16,8 +16,8 @@ class AuthService{
           context: context,
           builder: (context){
             return AlertDialog(
-              title: Text("Login failed"),
-              content: Text(e.toString()),
+              title: const Text("Login failed"),
+              content: const Text("Please try again later"),
             );
           }
       );

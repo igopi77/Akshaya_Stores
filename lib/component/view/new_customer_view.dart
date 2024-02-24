@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:stock_management_akshaya_store/component/view/home_view.dart';
 
 class NewCustomerAddingPage extends StatefulWidget {
   const NewCustomerAddingPage({super.key});
@@ -15,19 +17,25 @@ class _NewCustomerAddingPageState extends State<NewCustomerAddingPage> {
   TextEditingController customerPhoneNumberController = TextEditingController();
   TextEditingController customerEmailAddressController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool flag = false,decider=false;
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
+    return Scaffold(
       appBar: AppBar(
-        title: const Text("CUSTOMER ADDING FORM",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
+        title: const Text("CUSTOMER ADDING FORM",
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
         centerTitle: true,
         backgroundColor: Colors.blue,
       ),
-      body: formFieldForCustomer(),
+      body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: formFieldForCustomer(),
+      ),
     );
   }
-  Widget formFieldForCustomer(){
+
+  Widget formFieldForCustomer() {
     return Form(
       key: _formKey,
       child: Column(
@@ -35,18 +43,18 @@ class _NewCustomerAddingPageState extends State<NewCustomerAddingPage> {
           TextFormField(
             controller: customerNameController,
             decoration: InputDecoration(
-              hintText: "Customer Name",
-              icon: Icon(Icons.person),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide(color: Colors.blue,width: 2)
-              )
+                hintText: "Customer Name",
+                icon: Icon(Icons.person),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(color: Colors.blue, width: 2)
+                )
             ),
-            validator: (value){
-              if(value!.isEmpty){
+            validator: (value) {
+              if (value!.isEmpty) {
                 return "invalid";
               }
-              return "";
+              return null;
             },
           ),
           SizedBox(height: 10,),
@@ -57,14 +65,14 @@ class _NewCustomerAddingPageState extends State<NewCustomerAddingPage> {
                 icon: Icon(Icons.perm_contact_cal_outlined),
                 border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(color: Colors.blue,width: 2)
+                    borderSide: BorderSide(color: Colors.blue, width: 2)
                 )
             ),
-            validator: (value){
-              if(value!.isEmpty){
+            validator: (value) {
+              if (value!.isEmpty) {
                 return "invalid";
               }
-              return "";
+              return null;
             },
           ),
           SizedBox(height: 10,),
@@ -75,15 +83,15 @@ class _NewCustomerAddingPageState extends State<NewCustomerAddingPage> {
                 icon: Icon(Icons.store),
                 border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(color: Colors.blue,width: 2)
+                    borderSide: BorderSide(color: Colors.blue, width: 2)
                 )
             ),
             maxLines: 4,
-            validator: (value){
-              if(value!.isEmpty){
+            validator: (value) {
+              if (value!.isEmpty) {
                 return "invalid";
               }
-              return "";
+              return null;
             },
           ),
           SizedBox(height: 10,),
@@ -94,15 +102,15 @@ class _NewCustomerAddingPageState extends State<NewCustomerAddingPage> {
                 icon: Icon(Icons.home_filled),
                 border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(color: Colors.blue,width: 2)
+                    borderSide: BorderSide(color: Colors.blue, width: 2)
                 )
             ),
             maxLines: 4,
-            validator: (value){
-              if(value!.isEmpty){
+            validator: (value) {
+              if (value!.isEmpty) {
                 return "invalid";
               }
-              return "";
+              return null;
             },
           ),
           SizedBox(height: 10,),
@@ -113,34 +121,34 @@ class _NewCustomerAddingPageState extends State<NewCustomerAddingPage> {
                 icon: Icon(Icons.phone),
                 border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(color: Colors.blue,width: 2)
+                    borderSide: BorderSide(color: Colors.blue, width: 2)
                 )
             ),
             keyboardType: TextInputType.number,
-            validator: (value){
-              if(value!.isEmpty){
+             validator: (value) {
+              if (value!.isEmpty) {
                 return "invalid";
               }
-              return "";
+              return null;
             },
           ),
           SizedBox(height: 10,),
           TextFormField(
-            controller: customerEmailAddressController,
-            decoration: InputDecoration(
-                hintText: "Customer Email ",
-                icon: const Icon(Icons.email_outlined),
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: const BorderSide(color: Colors.blue,width: 2)
-                )
-            ),
-            validator: validateEmail
+              controller: customerEmailAddressController,
+              decoration: InputDecoration(
+                  hintText: "Customer Email ",
+                  icon: const Icon(Icons.email_outlined),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(color: Colors.blue, width: 2)
+                  )
+              ),
+              validator: validateEmail
           ),
           SizedBox(height: 20,),
           Center(
             child: MaterialButton(
-              onPressed: (){
+              onPressed: () {
                 _submitButton();
               },
               child: Text("Submit"),
@@ -152,18 +160,51 @@ class _NewCustomerAddingPageState extends State<NewCustomerAddingPage> {
 
     );
   }
-  String ? validateEmail(value){
-    if(value!.isEmpty){
+
+  String ? validateEmail(value) {
+    if (value!.isEmpty) {
       return "Please enter the email";
     }
     RegExp emailRegExp = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-    if(!emailRegExp.hasMatch(value)){
+    if (!emailRegExp.hasMatch(value)) {
       return "not a valid email";
     }
-    return "";
+    return null;
   }
-  void _submitButton(){
-    if(_formKey.currentState!.validate()){
+
+  void _submitButton() {
+    decider = _formKey.currentState!.validate();
+    if (decider == true) {
+      CollectionReference customerRef = FirebaseFirestore.instance.collection("customer");
+      customerRef.add({
+        "customerName" : customerNameController.text,
+        "storeName" : storeNameController.text,
+        "storeAddress" : storeAddressController.text,
+        "customerAddress" : customerAddressController.text,
+        "customerPhone" : customerPhoneNumberController.text,
+        "customerEmail" : customerEmailAddressController.text
+      });
+      showDialog(
+          context: context,
+          builder: (context){
+            return AlertDialog(
+              backgroundColor: Colors.grey,
+              title:  const Text("INFORMATION",style: TextStyle(fontSize: 25),),
+              content: const Text("Entered data succesfully inserted",style: TextStyle(color: Colors.blue,fontWeight: FontWeight.normal,fontSize: 20),),
+              actions: [
+                MaterialButton(
+                  onPressed: (){
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const HomePage())
+                    );
+                  },
+                  child: Text("OK"),
+                )
+              ],
+            );
+          }
+      );
     }
   }
 }
