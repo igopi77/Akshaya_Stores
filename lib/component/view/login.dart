@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:stock_management_akshaya_store/component/view/home_view.dart';
-import 'package:stock_management_akshaya_store/service/auth_service.dart';
+import 'package:stock_management_akshaya_store/service/login-service/auth_service.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);

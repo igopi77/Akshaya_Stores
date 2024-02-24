@@ -6,6 +6,8 @@ import "package:flutter/material.dart";
 import "package:stock_management_akshaya_store/component/view/home_view.dart";
 import "package:stock_management_akshaya_store/component/view/login.dart";
 import "package:stock_management_akshaya_store/component/view/new_customer_view.dart";
+import "package:stock_management_akshaya_store/component/view/stock_adding_view.dart";
+import "package:stock_management_akshaya_store/component/view/stock_selling_view.dart";
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,11 +20,13 @@ void main() async {
     )
   );
   Widget app = MaterialApp(
-    initialRoute: "/home",
+    initialRoute: "/stockSelling",
     routes: {
       "/login" : (context) => const LoginPage(),
       "/home" : (context) => const HomePage(),
-      "/customerAdding" :(context) => const NewCustomerAddingPage()
+      "/customerAdding" :(context) => const NewCustomerAddingPage(),
+      "/stockAdding" : (context) => const StockAddingPage(),
+      "/stockSelling" : (context) => const StockSellingPage()
     },
   );
   runApp(app);

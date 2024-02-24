@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:stock_management_akshaya_store/component/view/new_customer_view.dart';
+import 'package:stock_management_akshaya_store/component/view/stock_adding_view.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -47,7 +50,7 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
                 child: Padding(
-                  padding: EdgeInsets.only(top: 100,left: 50,right: 50,bottom: 100),
+                  padding: EdgeInsets.only(top: 100,left: 10,right: 10),
                   child: Column(
                     children: [
                       stockManagement()
@@ -74,9 +77,9 @@ class _HomePageState extends State<HomePage> {
           ],
         )
     ),
-        SizedBox(height: 20,),
+        SizedBox(height: 30,width: 30,),
         Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             MaterialButton(
               onPressed: (){
@@ -88,15 +91,18 @@ class _HomePageState extends State<HomePage> {
               child: Text("ADD CUSTOMER"),
               color: Colors.blue,
             ),
-            SizedBox(width: 30,),
+            SizedBox(width: 10,),
             MaterialButton(
               onPressed: (){
-
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const StockAddingPage())
+                );
               },
               child: Text("ADD STOCK"),
               color: Colors.blue,
             ),
-            SizedBox(height: 20,),
+            SizedBox(width: 10,),
             MaterialButton(
               onPressed: (){
 
@@ -104,7 +110,7 @@ class _HomePageState extends State<HomePage> {
               child: const Text("SELL STOCK"),
               color: Colors.blue,
             ),
-            SizedBox(width: 30,),
+            SizedBox(width: 10,),
             MaterialButton(
               onPressed: (){
                 _submit();
