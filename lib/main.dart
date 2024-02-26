@@ -12,15 +12,15 @@ import "package:stock_management_akshaya_store/component/view/stock_selling_view
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-    options: const FirebaseOptions(
-        apiKey: "AIzaSyCRg-1_wqmh3fUcotTW0jSvCoP2Gr2vyxo",
-        appId: "1:847763483235:web:72ca58e48e627f18ae6656",
-        messagingSenderId: "847763483235",
-        projectId: "akshaya-stores"
-    )
+      options: const FirebaseOptions(
+          apiKey: "AIzaSyCRg-1_wqmh3fUcotTW0jSvCoP2Gr2vyxo",
+          appId: "1:847763483235:web:72ca58e48e627f18ae6656",
+          messagingSenderId: "847763483235",
+          projectId: "akshaya-stores"
+      )
   );
   Widget app = MaterialApp(
-    initialRoute: "/stockSelling",
+    initialRoute: "/login",
     routes: {
       "/login" : (context) => const LoginPage(),
       "/home" : (context) => const HomePage(),

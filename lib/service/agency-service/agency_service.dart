@@ -10,7 +10,6 @@ class FetchAgencyData{
       QuerySnapshot querySnapshotAgency = await FirebaseFirestore.instance.collection("agency").get();
       querySnapshotAgency.docs.forEach((docs){ 
         String agencyName = docs.get("agencyName");
-        print(agencyName);
         String agencyId = docs.id;
         agencyData[agencyId] = agencyName ;
       });
@@ -18,7 +17,6 @@ class FetchAgencyData{
     catch(e){
         print(e);
     }
-    print(agencyData["yee4cehFbSyMmctOJVxF"]);
     return agencyData;
   }
 
