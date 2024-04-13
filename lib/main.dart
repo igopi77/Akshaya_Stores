@@ -20,7 +20,7 @@ void main() async {
       )
   );
   Widget app = MaterialApp(
-    initialRoute: "/login",
+    initialRoute: "/stockSelling",
     routes: {
       "/login" : (context) => const LoginPage(),
       "/home" : (context) => const HomePage(),

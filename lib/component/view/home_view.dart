@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:stock_management_akshaya_store/component/view/new_customer_view.dart';
 import 'package:stock_management_akshaya_store/component/view/stock_adding_view.dart';
+import 'package:stock_management_akshaya_store/component/view/stock_selling_view.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -105,7 +106,7 @@ class _HomePageState extends State<HomePage> {
             SizedBox(width: 10,),
             MaterialButton(
               onPressed: (){
-
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const StockSellingPage()));
               },
               child: const Text("SELL STOCK"),
               color: Colors.blue,

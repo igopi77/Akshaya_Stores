@@ -1,7 +1,6 @@
-import 'dart:html';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:stock_management_akshaya_store/service/agency-service/agency_service.dart';
 import 'package:stock_management_akshaya_store/service/sales-service/fetch_customer_details.dart';
 import 'package:stock_management_akshaya_store/service/sales-service/fetch_stack_name_service.dart';
@@ -21,6 +20,10 @@ class _StockSellingPageState extends State<StockSellingPage> {
   late Future<Map<String,dynamic>> companyList ;
   late Future<Map<String,dynamic>> stockList;
   late Future<Map<String,dynamic>> customerList;
+  int subTotal = 5000;
+  int tax = 3000;
+  int paidAmount = 7000;
+  int due = 300;
   String dropDownValueForStock = "select";
   String dropDownValueForCustomer = "select";
   String availableQuantity ="";
@@ -30,14 +33,27 @@ class _StockSellingPageState extends State<StockSellingPage> {
   TextEditingController mrpController = TextEditingController();
   TextEditingController gstController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  TextEditingController countController = TextEditingController();
+
 
   @override
   void initState(){
-    print("first checkpoint");
     super.initState();
-    stockList = fetchStockDetails.fetchStockName();
+    countController.addListener(_updateItemCount);
   }
 
+  void _updateItemCount(){
+    setState(() {
+
+    });
+  }
+
+  @override
+  void dispose(){
+    countController.removeListener(_updateItemCount);
+    countController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,6 +62,7 @@ class _StockSellingPageState extends State<StockSellingPage> {
         centerTitle: true,
         backgroundColor: Colors.blue,
       ),
+      backgroundColor: Colors.white60,
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: formFeildForSelling(),
@@ -53,203 +70,171 @@ class _StockSellingPageState extends State<StockSellingPage> {
     );
   }
   Widget formFeildForSelling(){
-    return FutureBuilder(
-        future: stockList,
-        builder: (context,snapShotForStock){
-          if(snapShotForStock.connectionState == ConnectionState.waiting){
-            return CircularProgressIndicator();
-          }
-          else if(snapShotForStock.hasError){
-            return Text("It have a error in snapshot");
-          }
-          else{
-            customerList = fetchCustomerDetails.fetchCustomerName();
-            return FutureBuilder(
-                future: customerList,
-                builder: (context,snapShotForCustomer){
-                  if(snapShotForCustomer.connectionState == ConnectionState.waiting){
-                    return CircularProgressIndicator();
-                  }
-                  else if(snapShotForCustomer.hasError){
-                    return Text("It have a error in snapshot");
-                  }
-                  else{
-                    return Form(
-                      key: _formKey,
-                      child: Column(
-                        children: [
-                          SizedBox(height: 20,),
-                          stock(snapShotForStock.data ?? {}),
-                          SizedBox(height: 20,),
-                          customer(snapShotForCustomer.data ?? {}),
-                          SizedBox(height: 20,),
-                          Card(
-                            color: Colors.red.shade300,
-                            child: Column(
-                              children: [
-                                Center(child: Text("Information about your product ", style: TextStyle(color: Colors.white,fontSize: 20),),),
-                                SizedBox(height: 10,),
-                                Text("Quantity Available in a Store : $availableQuantity", style: TextStyle(color: Colors.white,fontSize: 17),),
-                                SizedBox(height: 10,),
-                                Text("MRP You already set in a Store : $mprSetted", style: TextStyle(color: Colors.white,fontSize: 17),),
-                                SizedBox(height: 10,),
-                                Text("GST you set in a Store : $gstSetted", style: TextStyle(color: Colors.white,fontSize: 17),),
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: 10,),
-                          TextFormField(
-                            decoration: InputDecoration(
-                                hintText: "Enter your quantity",
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(color: Colors.blue,width: 2),
-                                ),
-                                icon: Icon(Icons.join_inner_sharp)
-                            ),
-                            keyboardType: TextInputType.number,
-                            inputFormatters: <TextInputFormatter>[
-                              FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))
-                            ],
-                            validator: (value){
-                              if(value!.isEmpty){
-                                return "invalid";
-                              }
-                              return "";
-                            },
-                          ),
-                          SizedBox(height: 10,),
-                          TextFormField(
-                            decoration: InputDecoration(
-                                hintText: "Enter your MRP",
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(color: Colors.blue,width: 2),
-                                ),
-                                icon: Icon(Icons.attach_money)
-                            ),
-                            keyboardType: TextInputType.number,
-                            inputFormatters: <TextInputFormatter>[
-                              FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))
-                            ],
-                            validator: (value){
-                              if(value!.isEmpty){
-                                return "invalid";
-                              }
-                              return "";
-                            },
-                          ),
-                          SizedBox(height: 10,),
-                          TextFormField(
-                            decoration: InputDecoration(
-                                hintText: "Enter your GST ( if 'NO' enter '0' )",
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(color: Colors.blue,width: 2),
-                                ),
-                                icon: Icon(Icons.gpp_good_sharp)
-                            ),
-                            keyboardType: TextInputType.number,
-                            inputFormatters: <TextInputFormatter>[
-                              FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))
-                            ],
-                            validator: (value){
-                              if(value!.isEmpty){
-                                return "invalid";
-                              }
-                              return "";
-                            },
-                          ),
-                          TextButton(
-                              onPressed: (){
-                                Navigator.pop(context);
-                              },
-                              child:Text("ADD",style: TextStyle(color: Colors.red,fontSize: 20),)
-                          )
-                        ],
-                      ),
-                    );
-                  }
-                }
-            );
-          }
-        });
-  }
-  Widget stock(Map<String,dynamic> data){
-    return Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(
-          child: DropdownButton<String>(
-            icon: Icon(Icons.arrow_drop_down_rounded),
-            iconSize: 20,
-            isExpanded: true,
-            value: dropDownValueForStock,
-            elevation: 16,
-            onChanged: (String ? newValue)  async{
-              setState(() {
-                dropDownValueForStock = newValue!;
-              });
-              setState(() {
-                fetchStockDetails.setBasicInformation(dropDownValueForStock);
-                availableQuantity = fetchStockDetails.getQuantity();
-                mprSetted = fetchStockDetails.getMrp();
-                gstSetted = fetchStockDetails.getGst();
-              });
-            },
-            items: [
-              DropdownMenuItem<String>(
-                value: "select",
-                child: Text("Select Your Stock"),
-              ),
-              ...data.values
-                  .toSet()
-                  .toList()
-                  .map<DropdownMenuItem<String>>((value) {
-                return DropdownMenuItem<String>(
-                  value: value.toString(),
-                  child: Text(value.toString()),
-                );
-              }).toList(),
+        const SizedBox(height: 50,),
+        const Text("From",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold, color: Colors.black),),
+        const SizedBox(height: 20,),
+        containerForFrom(context,"Owner:", "Muthuraja"),
+        SizedBox(height: 10,),
+        containerForFrom(context, "Email:", "muthuroja@gmail.com"),
+        SizedBox(height: 10,),
+        containerForFrom(context, "Phone Number:", "9433751909"),
+        SizedBox(height: 30,),
+        Text("Bill To",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold, color: Colors.black)),
+        const SizedBox(height: 20,),
+        containerForFrom(context,"Owner:", "Sothuraja"),
+        SizedBox(height: 10,),
+        containerForFrom(context, "Email:", "sothuraja@gmail.com"),
+        SizedBox(height: 10,),
+        containerForFrom(context, "Phone Number:", "9433751909"),
+        SizedBox(height: 30,),
+        Text("Invoice :",style: TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold),),
+        SizedBox(height: 20,),
+        containerForFrom(context, "Invoice no :", "121FGS43"),
+        SizedBox(height: 10,),
+        containerForFrom(context, "Due date :", "18/02/2003"),
+        SizedBox(height: 20,),
+        Card(
+          child: Row(
+            children: [
+              Text("Add",style: TextStyle(color: Colors.purple,fontWeight: FontWeight.bold,fontSize: 25),),
+              SizedBox(width: MediaQuery.of(context).size.width/13,),
+              Text("Product",style: TextStyle(color: Colors.purple,fontWeight: FontWeight.bold,fontSize: 25),),
+              SizedBox(width: MediaQuery.of(context).size.width/13,),
+              Text("Rate",style: TextStyle(color: Colors.purple,fontWeight: FontWeight.bold,fontSize: 25),),
+              SizedBox(width: MediaQuery.of(context).size.width/13,),
+              Text("Qty",style: TextStyle(color: Colors.purple,fontWeight: FontWeight.bold,fontSize: 25),),
+              SizedBox(width: MediaQuery.of(context).size.width/13,),
+              Text("Amount",style: TextStyle(color: Colors.purple,fontWeight: FontWeight.bold,fontSize: 25),),
+              SizedBox(width: MediaQuery.of(context).size.width/13,),
+            ],
+          ),
+        ),
+        tableForSelling(context),
+        SizedBox(height: 20,),
+        MaterialButton(onPressed: (){
+
+        },
+          child: Text("ADD ITEMS",style: TextStyle(color: Colors.white,fontSize: 18,fontWeight: FontWeight.bold,),),
+          color: Colors.green,
+        ),
+        Center(
+          child: billing(),
+        ),
+        SizedBox(height: 20,),
+        Center(
+          child: TextFormField(
+            decoration: InputDecoration(
+              hintText: "Write some notes or remainder",
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide(width: 2)
+              )
+            ),
+            maxLines: 4,
+          ),
+        ),
+        SizedBox(height: 30,),
+        Center(
+          child: Text("Vist again ;) ",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
+        )
+      ],
+    );
+  }
+
+  Widget billing(){
+    return Column(
+      children: [
+        Text("Billing",style: TextStyle(color: Colors.blue,fontSize: 25,fontWeight: FontWeight.bold),),
+        SizedBox(height: 20,),
+        Card(
+          child: Column(
+            //mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("Sub Total : ${subTotal}",style: TextStyle(fontSize: 20),),
+              SizedBox(height: 20,),
+              Text("Tax : ${tax}",style: TextStyle(fontSize: 20)),
+              SizedBox(height: 20,),
+              Text("Paid Amount : $paidAmount",style: TextStyle(fontSize: 20)),
+              SizedBox(height: 20,),
+              Text("Due : ${due}",style: TextStyle(fontSize: 20))
             ],
           ),
         )
       ],
     );
   }
+  Widget containerForFrom(BuildContext context,String left,String right){
+    return Container(
+      width: (MediaQuery.of(context).size.width)/1.5,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: Colors.black),
+          color: Colors.grey.shade300,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.white10.withOpacity(0.5), // Shadow color
+              spreadRadius: 5, // Spread radius
+              blurRadius: 7, // Blur radius
+              offset: Offset(0, 3), // Offset
+            )
+          ]
+      ),
+      child: Row(
+      //  mainAxisAlignment: MainAxisAlignment.spaceAround, // change when it needed designed based on mobile
+        children: [
+           Text(left, style: TextStyle(fontSize: 17,fontWeight: FontWeight.bold, color: Colors.black),),
+           Text(right,style: TextStyle(fontSize: 17),)
+        ],
+      ),
+    );
+  }
 
-  Widget customer(Map<String,dynamic> data){
-    return Row(
-      children: [
-        Expanded(
-          child: DropdownButton<String>(
-            icon: Icon(Icons.arrow_drop_down_rounded),
-            iconSize: 20,
-            isExpanded: true,
-            value: dropDownValueForCustomer,
-            elevation: 16,
-            onChanged: (String ? newValue){
-              setState(() {
-                dropDownValueForCustomer = newValue!;
-              });
-            },
-            items: [
-              DropdownMenuItem<String>(
-                value: "select",
-                child: Text("Select Your Customer"),
+  Widget textField(String hint){
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: TextFormField(
+        decoration: InputDecoration(
+            hintText: hint,
+            hintStyle: TextStyle(color: Colors.grey,fontSize: 16),
+            border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide(color: Colors.blue,width: 2)
+            )
+        ),
+      ),
+    );
+  }
+
+  Widget tableForSelling(BuildContext context){
+    return Card(
+      child: Column(
+        children: List.generate(5, (index) {
+          return Row(
+            children: [
+              MaterialButton(onPressed: (){
+                
+              }, 
+                child: Icon(Icons.add),
               ),
-              ...data.values
-                  .toSet()
-                  .toList()
-                  .map<DropdownMenuItem<String>>((value) {
-                return DropdownMenuItem<String>(
-                  value: value.toString(),
-                  child: Text(value.toString()),
-                );
-              }).toList(),
+              SizedBox(width: MediaQuery.of(context).size.width/13,),
+              Text("Cricket Bat",style: TextStyle(color: Colors.black,fontSize: 18,fontWeight: FontWeight.normal),),
+              SizedBox(width: MediaQuery.of(context).size.width/13),
+              Text("100000",style: TextStyle(color: Colors.black,fontSize: 18,fontWeight: FontWeight.normal),),
+              SizedBox(width: MediaQuery.of(context).size.width/13,),
+              Text("50",style: TextStyle(color: Colors.black,fontSize: 18,fontWeight: FontWeight.normal),),
+              SizedBox(width: MediaQuery.of(context).size.width/13,),
+              Text("95000",style: TextStyle(color: Colors.black,fontSize: 18,fontWeight: FontWeight.normal),),
+              SizedBox(width: MediaQuery.of(context).size.width/13,),
             ],
-          ),
-        )
-      ],
+          );
+        }),
+      ),
     );
   }
 }

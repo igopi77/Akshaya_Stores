@@ -17,6 +17,7 @@ class FetchAgencyData{
     catch(e){
         print(e);
     }
+    print(agencyData);
     return agencyData;
   }
 

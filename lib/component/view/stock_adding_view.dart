@@ -38,17 +38,14 @@ class _StockAddingPageState extends State<StockAddingPage> {
         backgroundColor: Colors.blue,
         centerTitle: true,
       ),
-      body: formFeildForStockAdding(),
+      body: SingleChildScrollView( scrollDirection: Axis.vertical,child: formFeildForStockAdding()),
     );
   }
   Widget formFeildForStockAdding(){
     return FutureBuilder<Map<String,dynamic>>(
         future: agencyList,
         builder: (context,snapshot){
-            if(snapshot.connectionState == ConnectionState.waiting){
-              return Center(child: CircularProgressIndicator());
-            }
-            else if(snapshot.hasError){
+            if(snapshot.hasError){
               return Center(child: Text("it has a error sorry"));
             }
             else{
@@ -211,9 +208,9 @@ class _StockAddingPageState extends State<StockAddingPage> {
           context: context,
           builder: (context){
             return AlertDialog(
-              backgroundColor: Colors.grey,
+              backgroundColor: Colors.white,
               title:  const Text("INFORMATION",style: TextStyle(fontSize: 25),),
-              content: const Text("Entered data succesfully inserted",style: TextStyle(color: Colors.blue,fontWeight: FontWeight.normal,fontSize: 20),),
+              content: const Text("Entered data succesfully inserted",style: TextStyle(color: Colors.black,fontWeight: FontWeight.normal,fontSize: 20),),
               actions: [
                 MaterialButton(
                   onPressed: (){
